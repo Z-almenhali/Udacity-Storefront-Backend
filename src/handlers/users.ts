@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { user, User } from '../models/user';
 import jwt from 'jsonwebtoken';
-
+import middleware from '../middleware/middleware';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -11,16 +11,29 @@ const { TOKEN_SECRET } = process.env;
 const store = new User();
 
 const index = async (_req: Request, res: Response) => {
-  const user = await store.index();
+
+  try {
+    const user = await store.index();
   res.json(user);
+  } catch (err) {
+    res.status(400);
+    res.json(err);
+  }
+
 };
 
 const show = async (req: Request, res: Response) => {
-  const user = await store.show(req.params.id);
-  if (!user) {
-    return res.sendStatus(404);
+  try {
+    const user = await store.show(req.params.id);
+    if (!user) {
+      return res.sendStatus(404);
+    }
+    res.json(user);
+  } catch (err) {
+    res.status(400);
+    res.json(err);
   }
-  res.json(user);
+
 };
 
 const create = async (req: Request, res: Response) => {
@@ -44,8 +57,8 @@ const create = async (req: Request, res: Response) => {
 
 const route = Router();
 
-route.get('/', index);
-route.get('/:id', show);
+route.get('/',middleware.validateJwt, index);
+route.get('/:id', middleware.validateJwt,show);
 route.post('/', create);
 
 export default route;

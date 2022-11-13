@@ -11,18 +11,25 @@
 ```
 POSTGRES_HOST=localhost
 POSTGRES_DB=store_DB
+POSTGRES_TEST_DB=store_test_DB
 POSTGRES_USER=Zahar
 POSTGRES_PASSWORD=password123
 BCRYPT_PASSWORD=Qq2424@!!!
 TOKEN_SECRET=kg590k35hmjy340y9k34yes4k09yk904hzzg43g
 SALT_ROUNDS=10
+ENV=test
 ```
-### Start DB
+### Start DB & create test database
 `docker compose build`  
 `docker compose start`
+`CREATE DATABASE "store_test_DB"`
 
 ### install project
 `npm install`
+
+### Run migrations
+`db-migrate up -e dev`
+`db-migrate up -e test`
 
 ### start project
 `npm run start`

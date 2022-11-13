@@ -4,17 +4,30 @@ import jwt from 'jsonwebtoken';
 const store = new Order();
 
 const index = async (_req: Request, res: Response) => {
-  const order = await store.index();
-  res.json(order);
+  try {
+    const order = await store.index();
+    res.json(order);
+  } catch (err) {
+    res.status(400);
+    res.json(err);
+  }
+ 
 };
 
 const show = async (req: Request, res: Response) => {
-  const order = await store.show(req.params.id);
-  if (!order) {
-    return res.sendStatus(404);
+//=====
+  try {
+    const order = await store.show(req.params.id);
+    if (!order) {
+      return res.sendStatus(404);
+    }
+    res.json(order);
+  } catch (err) {
+    res.status(400);
+    res.json(err);
   }
 
-  res.json(order);
+
 };
 
 const create = async (req: Request, res: Response) => {
